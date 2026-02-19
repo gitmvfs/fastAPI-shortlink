@@ -1,7 +1,7 @@
-from connection import connect_database
+from cache.connection import connect_database
+rc = connect_database() 
 
 def generate_id():
-    rc = connect_database() 
 
     try:
         new_id = rc.incr('link_id')

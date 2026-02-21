@@ -11,20 +11,33 @@ def new_url(url):
     try:
         id = generate_id()
         hash = link_shortener(id)
-        link.insert_link(hash, url)
+        link.post_link(hash, url)
         
         return hash
     
     except Exception as e:
         print('Error to create new URL:', e)
+        return None
 
 def strip_protocol(original_url:str):
     
     try:
         url = original_url.split('https://')[1]
-        print(url)
         
         return url
     
     except Exception as e:
         print('Error to remove protocol from URL:', e)
+        return None
+        
+def get_original_link(hash):
+    if not hash: 
+        raise Exception('Hash null')
+    try:  
+        original_url = link.get_link(hash)
+        
+        return f'https://{original_url}'
+    
+    except Exception as e:
+        print('Error to get all URL data:', e)
+        return None

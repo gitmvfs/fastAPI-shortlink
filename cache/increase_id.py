@@ -5,7 +5,6 @@ def generate_id():
 
     try:
         new_id = rc.incr('link_id')
-        print(f"ID Gerado: {new_id}")
         return new_id
     finally:
         rc.close() 

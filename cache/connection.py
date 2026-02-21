@@ -9,4 +9,5 @@ def connect_database():
     port = int(os.getenv('redis_port'))
 
     rc = Redis(host, port, decode_responses= True)
+    print('Redis connected to successfully!')
     return rc

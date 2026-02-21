@@ -11,5 +11,4 @@ def link_shortener(id:int) -> str:
     encoder = Hashids(secret_word, 4, base62_inverted)
     enconded = encoder.encode(id)
     
-    print(enconded)
     return enconded    

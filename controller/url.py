@@ -1,5 +1,5 @@
 from controller.link_shortener import link_shortener
-from cache.increase_id import generate_id
+from cache.connection import generate_id
 from database.connection import get_database_session
 from database.schema.link import Link
 

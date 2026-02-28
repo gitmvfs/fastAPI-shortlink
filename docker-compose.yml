@@ -1,0 +1,27 @@
+services:
+  cache:
+    image: redis:7.4-alpine
+    container_name: redis_url
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 1gb
+  db:
+    image: scylladb/scylla
+    container_name: scylladb_url
+    hostname: database-url-network
+    restart: always
+    ports:
+      - "9042:9042"
+    volumes:
+      - database-url-volume:var/lib/scylla
+    command: --smp 1
+
+volumes:
+  redis_data:
+  database-url-volume:

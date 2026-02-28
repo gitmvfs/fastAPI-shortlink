@@ -10,7 +10,7 @@ domain = os.getenv('domain_host')
 port = os.getenv('domain_port')
 domain_string = f'http://{domain}:{port}/' #Switch for Https if have SSL
 
-router = APIRouter()
+router = APIRouter(prefix='/url',tags=['url'])
 
 @router.post("/",status_code= 201)
 def short_link(original_url:str=Form(...,description="Url to shortner")):
@@ -21,6 +21,8 @@ def short_link(original_url:str=Form(...,description="Url to shortner")):
         
     except Exception as e:
         print(f'ERROR LOG: {e}')
+        return JSONResponse({'message':'error','message_error':e},status_code=500)
+
     
 @router.get("/{hash}",status_code = 302)
 def redirect(hash:str):

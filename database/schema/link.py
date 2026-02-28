@@ -1,5 +1,6 @@
 from cassandra.cluster import Session
 import datetime
+import asyncio
 
 class Link():
     
@@ -22,9 +23,12 @@ class Link():
         self.post_link_query = self.session.prepare("INSERT INTO short_link (id,link,created_at) VALUES (?, ?, ?) USING TTL 315360000")
         self.get_link_query = self.session.prepare("SELECT link FROM short_link WHERE id = ?")
     
-    def post_link(self,id_hash:str,url:str):
+    async def post_link(self,id_hash:str,url:str):
         datetime_now = datetime.datetime.now(datetime.timezone.utc)
-        self.session.execute(self.post_link_query, (id_hash, url, datetime_now))
+        future = self.session.execute_async(self.post_link_query, (id_hash, url, datetime_now))
+        
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, future.result)
         
     def get_link(self, hash):
         data = self.session.execute(self.get_link_query,[hash])

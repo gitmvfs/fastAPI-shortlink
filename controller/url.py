@@ -1,10 +1,9 @@
 from controller.link_shortener import link_shortener
 from cache.connection import generate_id
-from database.connection import get_database_session
+from database.connection import session
 from database.schema.link import Link
 
-db_session = get_database_session()
-link = Link(db_session)
+link = Link(session)
 
 def new_url(url):
     

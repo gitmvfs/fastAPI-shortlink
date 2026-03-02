@@ -11,16 +11,17 @@ services:
       redis-server
       --appendonly yes
       --maxmemory 1gb
+
   db:
-    image: scylladb/scylla
+    image: scylladb/scylla:latest
     container_name: scylladb_url
     hostname: database-url-network
     restart: always
     ports:
       - "9042:9042"
     volumes:
-      - database-url-volume:var/lib/scylla
-    command: --smp 1
+      - database-url-volume:/var/lib/scylla
+    command: --smp 1 --memory 2G --developer-mode 1
 
 volumes:
   redis_data:

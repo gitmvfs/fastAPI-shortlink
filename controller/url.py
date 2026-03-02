@@ -5,15 +5,12 @@ from database.schema.link import Link
 
 link = Link(session)
 
-def new_url(url):
-    
+async def new_url(url): 
     try:
         id = generate_id()
         hash = link_shortener(id)
-        link.post_link(hash, url)
-        
+        await link.post_link(hash, url) 
         return hash
-    
     except Exception as e:
         print('Error to create new URL:', e)
         return None
@@ -21,22 +18,24 @@ def new_url(url):
 def strip_protocol(original_url:str):
     
     try:
-        url = original_url.split('https://')[1]
+        if 'https://' in original_url:
+            url = original_url.split('https://')[1]
+            return url
         
-        return url
-    
+        return original_url
+        
     except Exception as e:
         print('Error to remove protocol from URL:', e)
         return None
         
-def get_original_link(hash):
+async def get_original_link(hash): 
     if not hash: 
         raise Exception('Hash null')
     try:  
-        original_url = link.get_link(hash)
-        
-        return f'https://{original_url}'
-    
+        original_url = await link.get_link(hash) 
+        if original_url:
+            return f'https://{original_url}'
+        return None
     except Exception as e:
         print('Error to get all URL data:', e)
         return None

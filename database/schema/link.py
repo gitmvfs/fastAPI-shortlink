@@ -30,7 +30,13 @@ class Link():
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, future.result)
         
-    def get_link(self, hash):
-        data = self.session.execute(self.get_link_query,[hash])
-        data = data.one()
-        return data['link']
+    async def get_link(self, hash):
+        future = self.session.execute_async(self.get_link_query, [hash])
+        
+        loop = asyncio.get_event_loop()
+        result_set = await loop.run_in_executor(None, future.result)
+        
+        row = result_set.one()
+        if row:
+            return row['link'] 
+        return None

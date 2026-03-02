@@ -13,10 +13,10 @@ domain_string = f'http://{domain}:{port}/' #Switch for Https if have SSL
 router = APIRouter(prefix='/url',tags=['url'])
 
 @router.post("/",status_code= 201)
-def short_link(original_url:str=Form(...,description="Url to shortner")):
+async def short_link(original_url:str=Form(...,description="Url to shortner")):
     try:
         normalize_url = url.strip_protocol(original_url)
-        hash = url.new_url(normalize_url)
+        hash = await url.new_url(normalize_url)
         return JSONResponse({'message':'success','data':{'original_url':original_url, 'short_url':f'{domain_string}{hash}'}},status_code=201)
         
     except Exception as e:
@@ -25,10 +25,10 @@ def short_link(original_url:str=Form(...,description="Url to shortner")):
 
     
 @router.get("/{hash}",status_code = 302)
-def redirect(hash:str):
+async def redirect(hash:str):
     try:
-       link = url.get_original_link(hash)
-       return RedirectResponse(link, status_code=302)
+        link = await url.get_original_link(hash)
+        return RedirectResponse(link, status_code=302)
     except Exception as e:
         print(f'Error to get all links: {e}')
         return JSONResponse({'message': 'Internal Server Error, contact an admin or check console log'}, status_code=500)
